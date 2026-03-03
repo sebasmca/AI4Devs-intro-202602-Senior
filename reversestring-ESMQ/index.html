@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+  <title>Reverse String</title>
+  <style>
+    :root{
+      --bg:#0b1220;
+      --text:#e8eefc;
+      --muted:#9fb0d0;
+      --border:rgba(255,255,255,.12);
+      --focus:rgba(59,130,246,.35);
+      --blue:#3b82f6;
+      --blueHover:#2563eb;
+      --gray:#64748b;
+      --grayHover:#475569;
+      --shadow:0 18px 50px rgba(0,0,0,.35);
+      --radius:14px;
+    }
+
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+      background: radial-gradient(1200px 600px at 20% 10%, rgba(59,130,246,.18), transparent 55%),
+                  radial-gradient(900px 450px at 80% 20%, rgba(148,163,184,.14), transparent 55%),
+                  var(--bg);
+      color:var(--text);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:24px;
+    }
+
+    .container{
+      width:min(560px, 100%);
+      background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
+      border:1px solid var(--border);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      padding:24px;
+      backdrop-filter: blur(10px);
+    }
+
+    h1{ margin:0 0 14px 0; font-size:22px; letter-spacing:.2px; }
+
+    .subtitle{
+      margin:0 0 18px 0;
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.4;
+    }
+
+    .form-group{ display:flex; flex-direction:column; gap:8px; margin-bottom:14px; }
+    label{ font-size:13px; color:var(--muted); }
+
+    input[type="text"]{
+      width:100%;
+      padding:12px 12px;
+      border-radius:12px;
+      border:1px solid var(--border);
+      background: rgba(0,0,0,.18);
+      color:var(--text);
+      outline:none;
+      transition: box-shadow .2s ease, border-color .2s ease;
+    }
+
+    input[type="text"]:focus{
+      border-color: rgba(59,130,246,.55);
+      box-shadow: 0 0 0 4px var(--focus);
+    }
+
+    .actions{ display:flex; gap:10px; flex-wrap:wrap; margin-top:6px; }
+
+    button{
+      appearance:none;
+      border:0;
+      border-radius:12px;
+      padding:11px 14px;
+      font-weight:600;
+      cursor:pointer;
+      transition: transform .05s ease, background .2s ease, opacity .2s ease;
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      user-select:none;
+    }
+
+    button:active{ transform: translateY(1px); }
+
+    .btn-primary{
+      background:var(--blue);
+      color:white;
+      min-width:160px;
+      justify-content:center;
+    }
+    .btn-primary:hover{ background:var(--blueHover); }
+
+    .btn-secondary{
+      background:var(--gray);
+      color:white;
+      min-width:160px;
+      justify-content:center;
+    }
+    .btn-secondary:hover{ background:var(--grayHover); }
+
+    button:disabled{ opacity:.55; cursor:not-allowed; transform:none; }
+
+    .result-wrap{ margin-top:16px; display:flex; flex-direction:column; gap:8px; }
+    .result-label{ font-size:13px; color:var(--muted); }
+
+    .result{
+      width:100%;
+      padding:12px 12px;
+      border-radius:12px;
+      border:1px solid var(--border);
+      background: rgba(0,0,0,.12);
+      color:var(--text);
+      font-size:14px;
+      outline:none;
+    }
+
+    .toast{ margin-top:10px; font-size:12px; color:var(--muted); min-height:16px; }
+
+    .icon{ width:16px; height:16px; display:inline-block; vertical-align:middle; opacity:.95; }
+  </style>
+</head>
+<body>
+  <main class="container" aria-label="Reverse String App">
+    <h1>Invertir texto</h1>
+    <p class="subtitle">Introduce texto (máx. 100). Se permiten espacios, acentos y signos de puntuación habituales.</p>
+
+    <form id="reverseForm" novalidate>
+      <div class="form-group">
+        <label for="textInput">Texto a invertir</label>
+        <input
+          type="text"
+          id="textInput"
+          name="textInput"
+          maxlength="100"
+          inputmode="text"
+          autocomplete="off"
+          placeholder="Introduce dos o más caracteres"
+          required
+        />
+      </div>
+
+      <div class="actions">
+        <button type="submit" id="reverseButton" class="btn-primary" disabled>
+          Invertir
+          <svg class="icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M7 8h12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            <path d="M15 5l4 3-4 3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M7 16h12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            <path d="M11 13l-4 3 4 3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+      </div>
+    </form>
+
+    <div class="result-wrap">
+      <div class="result-label">Resultado</div>
+      <input id="resultOutput" class="result" type="text" value="" readonly aria-label="Resultado invertido" />
+      <button type="button" id="copyButton" class="btn-secondary" disabled>
+        Copiar
+        <svg class="icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M9 9h10v10H9V9Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+          <path d="M5 15H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v1" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+      </button>
+      <div id="toast" class="toast" role="status" aria-live="polite"></div>
+    </div>
+  </main>
+
+  <script src="script.js" defer></script>
+</body>
+</html>
